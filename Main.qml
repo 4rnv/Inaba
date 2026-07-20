@@ -183,6 +183,7 @@ Window {
         icon.width: 48
         icon.height: 48
         anchors.top: parent.top
+        anchors.left: parent.left
         anchors.margins: 32
         onClicked: settingsPopup.open()
         background: Rectangle {
@@ -283,6 +284,26 @@ Window {
                     border.width: 1
                 }
             }
+        }
+    }
+
+
+    Button {
+        id: chatButton
+        width: 48
+        height: 48
+        icon.source: "icons/chat.svg"
+        icon.width: 48
+        icon.height: 48
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 32
+        onClicked: chatPanel.open = true
+        background: Rectangle {
+            radius: appSettings.radius / 2
+            width: 48
+            height: 48
+            color: chatButton.hovered ? Qt.rgba(appSettings.accent.r,appSettings.accent.g,appSettings.accent.b,0.7) : Qt.rgba(0,0,0,0.7)
         }
     }
 

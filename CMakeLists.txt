@@ -25,6 +25,7 @@ qt_add_qml_module(appInaba
         SOURCES SnipTool.cpp
         RESOURCES icons/send.svg
         RESOURCES icons/settings.svg
+        RESOURCES icons/chat.svg
 )
 if(WIN32)
     target_sources(appInaba PRIVATE GlobalHotkeyWin.h GlobalHotkeyWin.cpp)
