@@ -26,10 +26,9 @@ Window {
     Shortcut {
         sequence: "Escape"
         onActivated: {
+            snipTool.setSelectionRect(Qt.rect(startPos.x, startPos.y, 0, 0))
             snipTool.cancelSnip()
             selecting = false
-            snipTool.setSelectionRect(Qt.rect(startPos.x, startPos.y, 0, 0))
-            // window.hide()
         }
     }
     Shortcut {

@@ -3,6 +3,8 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include "SnipTool.h"
+#include "GlobalHotkeyWin.h"
+#include <windows.h>
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -23,10 +25,18 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    // Don't want this, the application should start and  when the user enters the keyboard shortcut it should open the snip (startSnip apparently)
     auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects().first());
     if (window)
-        snipTool->startSnip(window); // captures nothing, just shows overlay on start
+        window->hide();
+
+    GlobalHotkeyWin hotkey;
+    app.installNativeEventFilter(&hotkey);
+    QObject::connect(&hotkey,
+                     &GlobalHotkeyWin::triggered,
+                     [&]() {
+                         snipTool->startSnip(window);
+                     });
+    hotkey.registerHotkey(MOD_CONTROL | MOD_SHIFT | MOD_ALT, 'S');
 
     return QGuiApplication::exec();
 }
