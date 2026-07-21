@@ -1,13 +1,16 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickWindow>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
 #include "SnipTool.h"
 #include "GlobalHotkeyWin.h"
 #include <windows.h>
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QQuickWindow::setDefaultAlphaBuffer(true);
     QQmlApplicationEngine engine;
     app.setOrganizationName("NSTC");
@@ -37,6 +40,31 @@ int main(int argc, char *argv[])
                          snipTool->startSnip(window);
                      });
     hotkey.registerHotkey(MOD_CONTROL | MOD_SHIFT | MOD_ALT, 'S');
+    QSystemTrayIcon tray;
+    tray.setIcon(QIcon(":qt/qml/Inaba/icons/icon.png"));
+    tray.setToolTip("Inaba");
+    QMenu menu;
 
-    return QGuiApplication::exec();
+    QAction *showAction = menu.addAction("Show Overlay");
+    QAction *quitAction = menu.addAction("Quit");
+
+    tray.setContextMenu(&menu);
+
+    QObject::connect(showAction, &QAction::triggered, [&]{
+        snipTool->startSnip(window);
+    });
+
+    QObject::connect(quitAction, &QAction::triggered, [&]{
+        app.quit();
+    });
+
+    QObject::connect(&tray, &QSystemTrayIcon::activated,
+                     [&](QSystemTrayIcon::ActivationReason reason)
+                     {
+                         if (reason == QSystemTrayIcon::DoubleClick)
+                             snipTool->startSnip(window);
+                     });
+
+    tray.show();
+    return QApplication::exec();
 }

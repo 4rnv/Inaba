@@ -4,7 +4,7 @@ project(Inaba VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
 qt_standard_project_setup(REQUIRES 6.10)
 
@@ -26,6 +26,7 @@ qt_add_qml_module(appInaba
         RESOURCES icons/send.svg
         RESOURCES icons/settings.svg
         RESOURCES icons/chat.svg
+        RESOURCES icons/icon.png
 )
 if(WIN32)
     target_sources(appInaba PRIVATE GlobalHotkeyWin.h GlobalHotkeyWin.cpp)
@@ -43,7 +44,11 @@ set_target_properties(appInaba PROPERTIES
 )
 
 target_link_libraries(appInaba
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::Widgets
 )
 
 install(TARGETS appInaba
