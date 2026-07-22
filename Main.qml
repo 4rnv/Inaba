@@ -18,7 +18,7 @@ Window {
         property bool autoSend: false
         property int radius: 0
         property string modelName: "minicpm-v4.6:1b"
-        property string connectionURL: "https://localhost:11434/api/chat"
+        property string connectionURL: "http://localhost:11434/api/chat"
         property color accent: "#f272a9"
         property string defaultPrompt: "Describe the image in detail."
     }
