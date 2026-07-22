@@ -44,6 +44,8 @@ Window {
             anchors.fill: parent
             color: Qt.rgba(0,0,0,0.3)
             visible: !overlay.hasSelection
+            border.width: 20
+            border.color: Qt.rgba(appSettings.accent.r, appSettings.accent.g, appSettings.accent.b, 0.1)
         }
 
         // Overlays after selection
