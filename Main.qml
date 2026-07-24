@@ -332,7 +332,6 @@ Window {
                 Layout.fillWidth: true
                 Text { text: "Chat"; color: "white"; font.pointSize: 14; font.bold: true; Layout.fillWidth: true }
                 Button {
-                    text: "✕"
                     flat: true
                     onClicked: chatPanel.open = false
                     contentItem: Text { text: "✕"; color: "white"; horizontalAlignment: Text.AlignHCenter }
@@ -386,8 +385,34 @@ Window {
             chatModel.append({ role: "assistant", content: text })
         }
         function onError(message) {
-            chatModel.append({ role: "assistant", content: "⚠ " + message })
-            chatPanel.open = true
+                toast.show(message)
+        }
+    }
+
+    Rectangle {
+        id: toast
+        property string message
+        width: Math.min(400, parent.width * 0.6)
+        height: 60
+        color: Qt.rgba(0.2, 0.2, 0.2, 0.85)
+        radius: appSettings.radius
+        anchors.top: parent.top
+        anchors.topMargin: 50
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: false
+        border.color: "red"
+        border.width: 1
+        Text {
+            anchors.centerIn: parent
+            text: toast.message
+            color: "white"
+            font.pointSize: 14
+        }
+        Timer { id: toastTimer; interval: 3000; onTriggered: toast.visible = false }
+        function show(msg) {
+            toast.message = msg
+            visible = true
+            toastTimer.restart()
         }
     }
 }
