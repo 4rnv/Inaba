@@ -111,18 +111,20 @@ Window {
                 selecting = false
                 if(appSettings.autoSend) {
                     snipTool.capture(appSettings.defaultPrompt, appSettings.connectionURL, appSettings.modelName)
+                    textarea1.text = ""
+                    textareawrapper.state = "sent"
                 }
             }
         }
     }
     Rectangle {
         id: textareawrapper
-        width: Screen.width/3
-        height: Screen.height/6
+        width: Screen.width * 0.4
+        height: Screen.height * 0.2
+        x: (parent.width - width) * 0.5
+        y: parent.height - height - 40
+        z: 2
         color: Qt.rgba(0.1, 0.1, 0.1, 0.85)
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 40
-        anchors.horizontalCenter: parent.horizontalCenter
         border.width: 2
         border.color: textarea1.activeFocus ? appSettings.accent : Qt.rgba(1,1,1,0.15)
         radius: appSettings.radius
@@ -138,7 +140,7 @@ Window {
             anchors.rightMargin: 12
             anchors.topMargin: 8
             anchors.bottomMargin: 8
-            font.pointSize: 14
+            font.pointSize: 12
             placeholderText: "Enter query… (Enter to send, Shift+Enter for newline)"
             placeholderTextColor: "#888888"
             color: "white"
@@ -151,13 +153,14 @@ Window {
                     if (textarea1.text.trim().length > 0) {
                         snipTool.capture(textarea1.text, appSettings.connectionURL, appSettings.modelName)
                         textarea1.text = ""
+                        textareawrapper.state = "sent"
                     }
                 }
             }
         }
         Button {
             id: sendButton
-            width: parent.width/8
+            width: parent.width * 0.125
             height: parent.height
             icon.source: "icons/send.svg"
             icon.width: 48
@@ -165,8 +168,11 @@ Window {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             onClicked: {
-                snipTool.capture(textarea1.text, appSettings.connectionURL, appSettings.modelName)
-                textarea1.text = ""
+                if(textarea1.text.trim().length > 0) {
+                    snipTool.capture(textarea1.text, appSettings.connectionURL, appSettings.modelName)
+                    textarea1.text = ""
+                    textareawrapper.state = "sent"
+                }
             }
             background: Rectangle {
                 radius: appSettings.radius
@@ -175,6 +181,31 @@ Window {
                 color: sendButton.hovered ? Qt.rgba(appSettings.accent.r,appSettings.accent.g,appSettings.accent.b,0.7) : "transparent"
             }
         }
+        states: [
+            State {
+                name: "sent"
+                PropertyChanges {
+                    target: textareawrapper
+                    x: chatPanel.x
+                    y: chatPanel.y + chatPanel.height - height
+                    width: chatPanel.width
+                    height: 100
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: ""
+                to: "sent"
+                ParallelAnimation {
+                    NumberAnimation {
+                        properties: "x,y,width,height"
+                        duration: 300
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
+        ]
     }
 
     Button {
