@@ -385,13 +385,38 @@ Window {
                     color: role === "user" ? Qt.rgba(appSettings.accent.r, appSettings.accent.g, appSettings.accent.b, 0.4)
                                             : Qt.rgba(1,1,1, 0.2)
                     height: msgText.implicitHeight + 20
-                    Text {
-                        id: msgText
-                        text: content
-                        color: "white"
-                        wrapMode: Text.Wrap
-                        width: parent.width - 20
-                        anchors.centerIn: parent
+                    ColumnLayout {
+                        id: msgLayout
+                        anchors.fill: parent
+                        anchors.margins: 2
+                        spacing: 8
+                        TextEdit {
+                            id: msgText
+                            text: content
+                            color: "white"
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                            selectByMouse: true
+                            selectByKeyboard: true
+                            readOnly: true
+                        }
+                        TextEdit {
+                            id: clipboardBypass
+                            visible: false
+                        }
+                        Button {
+                            text: "Copy"
+                            onClicked: {
+                                clipboardBypass.text = msgText.text
+                                clipboardBypass.selectAll()
+                                clipboardBypass.copy()
+                                console.log("Copied to clipboard!")
+                            }
+                            visible: role !== "user"
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredHeight: visible ? implicitHeight : 0
+                            Layout.preferredWidth: visible ? implicitWidth : 0
+                        }
                     }
                 }
             }
