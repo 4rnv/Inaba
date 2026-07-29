@@ -356,7 +356,7 @@ Window {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 10
+            anchors.margins: 4
             spacing: 10
 
             RowLayout {
@@ -382,40 +382,49 @@ Window {
                 delegate: Rectangle {
                     width: chatList.width
                     radius: appSettings.radius / 2
-                    color: role === "user" ? Qt.rgba(appSettings.accent.r, appSettings.accent.g, appSettings.accent.b, 0.4)
-                                            : Qt.rgba(1,1,1, 0.2)
+                    color: role === "user" ? Qt.rgba(appSettings.accent.r, appSettings.accent.g, appSettings.accent.b, 0.4) : Qt.rgba(1,1,1, 0.2)
                     height: msgText.implicitHeight + 20
-                    ColumnLayout {
-                        id: msgLayout
-                        anchors.fill: parent
-                        anchors.margins: 2
-                        spacing: 8
-                        TextEdit {
-                            id: msgText
-                            text: content
-                            color: "white"
-                            wrapMode: Text.Wrap
-                            Layout.fillWidth: true
-                            selectByMouse: true
-                            selectByKeyboard: true
-                            readOnly: true
+                    TextEdit {
+                        id: msgText
+                        text: content
+                        color: "white"
+                        wrapMode: Text.Wrap
+                        padding: 0
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            top: parent.top
+                            margins: 8
                         }
-                        TextEdit {
-                            id: clipboardBypass
-                            visible: false
+                        selectByMouse: true
+                        selectByKeyboard: true
+                        readOnly: true
+                    }
+                    TextEdit {
+                        id: clipboardBypass
+                        visible: false
+                    }
+                    Button {
+                        id: copyButton
+                        visible: role !== "user"
+                        icon.source: "icons/copy.svg"
+                        icon.width: 24
+                        icon.height: 24
+                        anchors {
+                            right: parent.right
+                            bottom: parent.bottom
+                            rightMargin: 0
+                            bottomMargin: 0
                         }
-                        Button {
-                            text: "Copy"
-                            onClicked: {
-                                clipboardBypass.text = msgText.text
-                                clipboardBypass.selectAll()
-                                clipboardBypass.copy()
-                                console.log("Copied to clipboard!")
-                            }
-                            visible: role !== "user"
-                            Layout.alignment: Qt.AlignRight
-                            Layout.preferredHeight: visible ? implicitHeight : 0
-                            Layout.preferredWidth: visible ? implicitWidth : 0
+                        flat: true
+                        onClicked: {
+                            clipboardBypass.text = msgText.text
+                            clipboardBypass.selectAll()
+                            clipboardBypass.copy()
+                            console.log("Copied to clipboard!")
+                        }
+                        background: Rectangle {
+                            color: "transparent"
                         }
                     }
                 }

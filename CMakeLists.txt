@@ -26,6 +26,7 @@ qt_add_qml_module(appInaba
         RESOURCES icons/send.svg
         RESOURCES icons/settings.svg
         RESOURCES icons/chat.svg
+        RESOURCES icons/copy.svg
         RESOURCES icons/icon.png
 )
 if(WIN32)
