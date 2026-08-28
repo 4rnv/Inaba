@@ -421,7 +421,7 @@ Window {
                             clipboardBypass.text = msgText.text
                             clipboardBypass.selectAll()
                             clipboardBypass.copy()
-                            console.log("Copied to clipboard!")
+                            toast.show("Copied to clipboard", "gray")
                         }
                         background: Rectangle {
                             color: "transparent"
@@ -450,13 +450,14 @@ Window {
             chatModel.append({ role: "assistant", content: text })
         }
         function onError(message) {
-                toast.show(message)
+                toast.show(message, "red")
         }
     }
 
     Rectangle {
         id: toast
         property string message
+        property string borderColour
         width: Math.min(400, parent.width * 0.6)
         height: 60
         color: Qt.rgba(0.2, 0.2, 0.2, 0.85)
@@ -465,7 +466,7 @@ Window {
         anchors.topMargin: 50
         anchors.horizontalCenter: parent.horizontalCenter
         visible: false
-        border.color: "red"
+        border.color: borderColour
         border.width: 1
         Text {
             anchors.centerIn: parent
@@ -474,8 +475,9 @@ Window {
             font.pointSize: 14
         }
         Timer { id: toastTimer; interval: 3000; onTriggered: toast.visible = false }
-        function show(msg) {
+        function show(msg, bc) {
             toast.message = msg
+            toast.borderColour = bc
             visible = true
             toastTimer.restart()
         }
